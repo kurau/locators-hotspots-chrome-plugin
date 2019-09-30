@@ -1,0 +1,42 @@
+[
+  {
+    "path": "//h1[contains(@class,'new-lk-title_indent_bottom')]",
+    "testcount": 3,
+    "tests": [
+      {"name": "test1"},
+      {"name": "aTest"}
+    ]
+  },
+  {
+    "path": "//div[@class='profsearch__title-wrapper']",
+    "testcount": 2,
+    "tests": [
+      {"name": "test122"},
+      {"name": "aTest22"}
+    ]
+  },
+  {
+    "path": "//div[@class='NavMenu ']",
+    "testcount": 5,
+    "tests": [
+      {"name": "test1333"},
+      {"name": "aTest333"}
+    ]
+  },
+  {
+    "path": "//a[contains(@href,'page=5')]",
+    "testcount": 5,
+    "tests": [
+      {"name": "test1333"},
+      {"name": "aTest333"}
+    ]
+  },
+  {
+    "path": "//div[@class='Menu__item Menu__item_theme_islands'][contains(.,'Дом')]",
+    "testcount": 10,
+    "tests": [
+      {"name": "test13444"},
+      {"name": "aTest444"}
+    ]
+  }
+]
