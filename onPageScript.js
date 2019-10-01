@@ -3,6 +3,12 @@ var arr1 = JSON.parse(localStorage.getItem('locators'));
 console.log(" * " + arr1.length);
 
 function flash(arr) {
+
+    var oldElements = document.getElementsByClassName("test-coverage");
+    for (var i=0; i<oldElements.length; i++) {
+        oldElements[i].remove();
+    }
+
     for (let i in arr) {
 
         console.log(" * " + arr[i].path);
@@ -64,8 +70,6 @@ document.onmouseover = function(event) {
     let isTooltip = target.classList.contains("test-coverage");
     if (!isTooltip) {
         return;
-    } else {
-        console.log("tooltip");
     }
 
     tooltip = document.createElement('div');
@@ -74,11 +78,13 @@ document.onmouseover = function(event) {
     tooltip.style.color = "green";
     tooltip.style.borderRadius = "4px";
     tooltip.style.position = "fixed";
+    tooltip.style.zIndex = "1002";
     tooltip.padding = "10px 20px";
     tooltip.innerHTML = "test1, test2, test3 ...";
+    document.body.append(tooltip);
 
     let coords = target.getBoundingClientRect();
-    let left = coords.right - 1;
+    let left = coords.left + (target.offsetWidth - tooltip.offsetWidth) / 2;
     if (left < 0) left = 0;
 
     let top = coords.top - tooltip.offsetHeight - 5;
@@ -88,8 +94,6 @@ document.onmouseover = function(event) {
 
     tooltip.style.left = left + 'px';
     tooltip.style.top = top + 'px';
-
-    target.append(tooltip);
 };
 
 document.onmouseout = function(e) {
