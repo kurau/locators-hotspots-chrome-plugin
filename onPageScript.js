@@ -10,12 +10,17 @@ function flash(arr) {
     }
 
     for (let i in arr) {
-
-        console.log(" * " + arr[i].path);
-        let elem = document.evaluate(arr[i].path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null)
+        let elem;
+        let elem1 = document.evaluate(arr[i].path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null)
             .singleNodeValue;
-        if (elem == null) {
+        if (elem1 == null) {
             continue;
+        }
+
+        if(arr[i].path.includes("input")) {
+            elem = elem1.parentNode
+        } else {
+            elem = elem1;
         }
 
 
@@ -31,39 +36,83 @@ function flash(arr) {
 
         let hoverElement = document.createElement('div');
         hoverElement.classList.add("test-coverage");
-        hoverElement.innerHTML = arr[i].testcount;
+        hoverElement.innerHTML = arr[i].count;
+        var title = "";
+        for (var j=0; j<arr[i].names.length; j++) {
+            title = title + arr[i].names[j] + "\n";
+        }
+        hoverElement.setAttribute("title", title);
         hoverElement.style.position = "absolute";
         hoverElement.style.borderRadius = "4px";
-        hoverElement.style.right = "0";
-        hoverElement.style.bottom = "0";
+        hoverElement.style.left = "0";
+        hoverElement.style.top = "0";
         hoverElement.style.backgroundColor = "lightblue";
 
-        elem.style.border = "thin dotted lightblue";
+        hoverElement.style.zIndex = "1002";
+        // hoverElement.style.top = elem.style.top;
+        // hoverElement.style.left = elem.style.left;
+        // hoverElement.style.right = elem.style.right;
+        // hoverElement.style.height = elem.style.height;
+        // hoverElement.style.width = elem.style.width;
+
+        // elem.style.border = "thin solid lightblue";
         elem.style.position = "relative";
-        elem.style.border = arr[i].path;
         elem.appendChild(hoverElement);
     }
 }
 
-
 flash(arr1);
 
-var observer = new MutationObserver(function(mutations) {
-    for(let mutation of mutations) {
-        for(let node of mutation.addedNodes) {
-            if (!(node instanceof HTMLElement)) {
-                continue;
-            }
-            if (node.matches(".test-coverage")) {
-                continue;
-            }
-            flash(arr1);
-        }
-    }
-});
-observer.observe(document.body, {subtree: true, childList: true});
+const wrapAll = (target, wrapper = document.createElement('div')) => {
+    ;[ ...target.childNodes ].forEach(child => wrapper.appendChild(child))
+    target.appendChild(wrapper);
+    return wrapper
+};
+const wrapper = wrapAll(document.body);
+wrapper.style.width = "70%";
+wrapper.style.cssFloat = "left";
 
-let tooltip;
+document.body.appendChild(wrapper);
+
+var bar = document.createElement("div");
+bar.style.border = "thick solid red";
+bar.style.width = "28%";
+bar.style.cssFloat = "right";
+bar.style.backgroundColor = "lightblue";
+bar.style.zIndex = "1002";
+
+var barText = "";
+for (let i in arr1) {
+    barText += arr1[i].path + "<br><br>";
+}
+bar.innerHTML = barText;
+
+var button = document.createElement("input");
+button.type = "button";
+button.onclick = function(){
+        flash(arr1);
+    };
+
+bar.appendChild(button);
+
+document.body.appendChild(bar);
+// ДИНАМИЧЕСКОЕ ОБНОВЛЕНИЕ
+// var observer = new MutationObserver(function(mutations) {
+//     for(let mutation of mutations) {
+//         for(let node of mutation.addedNodes) {
+//             if (!(node instanceof HTMLElement)) {
+//                 continue;
+//             }
+//             if (node.matches(".test-coverage")) {
+//                 continue;
+//             }
+//             flash(arr1);
+//         }
+//     }
+// });
+// observer.observe(document.body, {subtree: true, childList: true});
+
+var tooltip;
 document.onmouseover = function(event) {
     let target = event.target;
 
@@ -80,7 +129,7 @@ document.onmouseover = function(event) {
     tooltip.style.position = "fixed";
     tooltip.style.zIndex = "1002";
     tooltip.padding = "10px 20px";
-    tooltip.innerHTML = "test1, test2, test3 ...";
+    tooltip.innerHTML = target.getAttribute("title");
     document.body.append(tooltip);
 
     let coords = target.getBoundingClientRect();
@@ -102,3 +151,4 @@ document.onmouseout = function(e) {
         tooltip = null;
     }
 };
+

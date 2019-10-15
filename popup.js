@@ -27,9 +27,9 @@ showLocators.onclick = function () {
 
 downloadFile.onclick = function () {
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "file:///Users/kurau/git/tmp/chrome-ext/locators.json", true);
+    xhr.open("GET", "file:///Users/kurau/git/tmp/chrome-ext/locators2.json", true);
     xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4) {
+        if (xhr.readyState === 4) {
             var resp = JSON.parse(xhr.responseText);
             console.log(" -> " + JSON.stringify(resp, null, 2));
             chrome.storage.local.set({"locators": xhr.responseText}, function () {
