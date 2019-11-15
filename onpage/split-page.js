@@ -34,7 +34,7 @@ function setBarTests(arr) {
         }
         if(Array.isArray(arr[i].child) && arr[i].child.length) {
             indent++;
-            setBarText(arr[i].child);
+            setBarTests(arr[i].child);
         }
         if((arr.length - 1) === Number(i)) {
             indent--;

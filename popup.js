@@ -1,12 +1,28 @@
-let showLocators = document.getElementById('showLocators');
-let downloadFile = document.getElementById('downloadFile');
+document.getElementById('showLocators').onclick = function () {
+    showData()
+};
 
-chrome.storage.sync.get('color', function (data) {
-    showLocators.style.backgroundColor = data.color;
-    showLocators.setAttribute('value', data.color);
-});
+document.getElementById('save').onclick = function () {
+    downloadData();
+};
 
-showLocators.onclick = function () {
+
+function downloadData() {
+    let source = document.getElementById('dataSource').value;
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", source, false);
+    xhr.send();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            var resp = JSON.parse(xhr.responseText);
+            console.log(" -> " + JSON.stringify(resp, null, 2));
+            chrome.storage.local.set({"locators": xhr.responseText}, function () {
+            });
+        }
+    };
+}
+
+function showData() {
     chrome.storage.local.get(["locators"], function (items) {
         console.log(" # " + items.locators)
         var stringify = JSON.stringify(items.locators);
@@ -21,25 +37,12 @@ showLocators.onclick = function () {
                 file : "onpage/main.css"
             });
             chrome.tabs.executeScript(tabs[0].id, { file: "onpage/split-page.js" }, function() {
-                    chrome.tabs.executeScript(tabs[0].id, { file: "onpage/show-locators.js" }, function() {
-                        chrome.tabs.executeScript(tabs[0].id, { file: "onpage/show-info.js" })
-                    })
-                });
+                chrome.tabs.executeScript(tabs[0].id, { file: "onpage/show-locators.js" }, function() {
+                    chrome.tabs.executeScript(tabs[0].id, { file: "onpage/show-info.js" })
+                })
+            });
         });
     });
-};
+}
 
-downloadFile.onclick = function () {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "file:///Users/kurau/git/locators-hotspots-chrome-plugin/data/locators3.json", true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            var resp = JSON.parse(xhr.responseText);
-            console.log(" -> " + JSON.stringify(resp, null, 2));
-            chrome.storage.local.set({"locators": xhr.responseText}, function () {
-            });
-        }
-    };
-    xhr.send();
-};
 

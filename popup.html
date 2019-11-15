@@ -2,16 +2,29 @@
 <html>
     <head>
       <style>
-        button {
-          height: 30px;
-          width: 30px;
-          outline: none;
-        }
+          button {
+              background-color: #aaaaaa;
+              border: none;
+              color: #009933;
+              padding: 5px 10px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+              font-size: 16px;
+              margin: 4px 2px;
+              cursor: pointer;
+          }
       </style>
     </head>
     <body>
-      <button id="showLocators" style="background-color: aqua"></button>
-      <button id="downloadFile" style="background-color: green"></button>
-      <script src="popup.js"></script>
+        <p>
+            <label for="dataSource">Locators List Source</label><br />
+            <input type="text" id="dataSource" name="dataSource" size="50" placeholder="<path to locators.json>" />
+        </p>
+        <p>
+            <button id="save" class="button">Save Locators</button>
+        </p>
+        <button id="showLocators" class="button">Show Locators</button>
+        <script src="popup.js"></script>
     </body>
 </html>

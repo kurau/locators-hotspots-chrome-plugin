@@ -1,16 +1,11 @@
 var arr1 = JSON.parse(localStorage.getItem('locators'));
 
-var coverageInfo = document.getElementById("coverageInfoBar");
-
-let hasNewNode = false;
-
 function addPin(element, currentNode) {
     let pin = document.createElement('div');
     pin.classList.add("test-coverage");
     pin.classList.add("coveragePin");
     pin.style.zIndex = 1002;
-    // pin.innerHTML = getMapSize(currentNode.tests).toString();
-    pin.innerHTML = "1";
+    pin.innerHTML = getMapSize(currentNode.tests).toString();
     pin.setAttribute("title", currentNode.meta.fullPath);
     let tests = "";
     for (let k in currentNode.tests) {
@@ -18,7 +13,6 @@ function addPin(element, currentNode) {
     }
     pin.setAttribute("data-tests", tests);
 
-    element.style.position = "relative";
     element.appendChild(pin);
 }
 
@@ -32,14 +26,20 @@ function getMapSize(x) {
 
 function findElement(node) {
     let elem;
-    let elem1 = document.evaluate(node.meta.fullPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null)
+    let elem1 = document
+        .evaluate(node.meta.fullPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null)
         .singleNodeValue;
+
     if (elem1 == null) {
         return null;
     }
 
-    if (node.meta.fullPath.includes("input")) {
-        elem = elem1.parentNode
+    if (elem1.tagName === 'A') {
+        elem1.style.position = "relative";
+    }
+
+    if (elem1.tagName === 'INPUT') {
+        elem = elem1.parentNode;
     } else {
         elem = elem1;
     }
@@ -50,10 +50,11 @@ function showElements(subArr) {
     for (let i in subArr) {
         let current = subArr[i];
 
+        if (Array.isArray(current.child) && current.child.length) {
+            showElements(current.child);
+        }
+
         if (!current.meta.fullPath) {
-            if(Array.isArray(current.child) && current.child.length) {
-                showElements(current.child);
-            }
             continue;
         }
 
@@ -74,15 +75,12 @@ function removePrevElements() {
     }
 }
 
-removePrevElements();
-showElements(arr1);
-
-var observer = new MutationObserver(function(mutations) {
-    for(let mutation of mutations) {
+var observer = new MutationObserver(function (mutations) {
+    for (let mutation of mutations) {
         if (hasNewNode) {
             break;
         }
-        for(let node of mutation.addedNodes) {
+        for (let node of mutation.addedNodes) {
             if (!(node instanceof HTMLElement)) {
                 continue;
             }
@@ -93,11 +91,17 @@ var observer = new MutationObserver(function(mutations) {
             break;
         }
     }
+});
+observer.observe(document.body, {subtree: true, childList: true});
+
+hasNewNode = true;
+
+function wroomwroom() {
     if (hasNewNode) {
         removePrevElements();
         showElements(arr1);
         hasNewNode = false;
     }
+}
 
-});
-observer.observe(document.body, {subtree: true, childList: true});
+setInterval(wroomwroom, 1000);

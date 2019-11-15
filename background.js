@@ -5,7 +5,7 @@ chrome.runtime.onInstalled.addListener(function () {
         chrome.declarativeContent.onPageChanged.addRules([{
             conditions: [
                 new chrome.declarativeContent.PageStateMatcher({
-                    pageUrl: {hostEquals: 'realty.test.vertis.yandex.ru'}
+                    pageUrl: {hostEquals: 'realty.yandex.ru'}
                 })
             ],
             actions: [new chrome.declarativeContent.ShowPageAction()]
