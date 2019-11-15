@@ -10,7 +10,7 @@ document.getElementById('save').onclick = function () {
 function downloadData() {
     let source = document.getElementById('dataSource').value;
     let xhr = new XMLHttpRequest();
-    xhr.open("GET", source, false);
+    xhr.open("GET", source, true);
     xhr.send();
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
