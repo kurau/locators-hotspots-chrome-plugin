@@ -34,6 +34,11 @@
     background-color: dodgerblue;
 }
 
+.coverage-test-item {
+    word-break: break-all;
+    margin: 5px 0;
+}
+
 .coverageInfoBar input:checked+label {
     color: #555;
     border-top: 1px solid #009933;

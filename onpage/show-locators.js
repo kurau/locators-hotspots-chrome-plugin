@@ -9,7 +9,9 @@ function addPin(element, currentNode) {
     pin.setAttribute("title", currentNode.meta.fullPath);
     let tests = "";
     for (let k in currentNode.tests) {
-        tests = tests + k + '</br>';
+        tests = tests + '<li class="coverage-test-item">' +
+            '<a target="_blank" href="https://yandex.ru">' + k + '</a>' +
+            '</li>';
     }
     pin.setAttribute("data-tests", tests);
 

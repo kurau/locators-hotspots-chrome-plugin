@@ -39,7 +39,6 @@ function setBarTests(arr) {
         if((arr.length - 1) === Number(i)) {
             indent--;
         }
-        barTests = barTests + '<br/>'
     }
     return barText;
 }
