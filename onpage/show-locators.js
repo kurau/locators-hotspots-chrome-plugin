@@ -10,7 +10,7 @@ function addPin(element, currentNode) {
     let tests = "";
     for (let k in currentNode.tests) {
         tests = tests + '<li class="coverage-test-item">' +
-            '<a target="_blank" href="https://yandex.ru">' + k + '</a>' +
+            '<a target="_blank" href="http://172.20.7.60:54556/index.html#testresult/' + currentNode.tests[k] + '/">' + k + '</a>' +
             '</li>';
     }
     pin.setAttribute("data-tests", tests);

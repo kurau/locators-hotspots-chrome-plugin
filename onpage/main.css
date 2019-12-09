@@ -35,7 +35,7 @@
 }
 
 .coverage-test-item {
-    word-break: break-all;
+    word-break: break-word;
     margin: 5px 0;
 }
 
