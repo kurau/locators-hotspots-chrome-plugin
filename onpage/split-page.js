@@ -12,11 +12,7 @@ const wrapAll = (target, wrapper = document.createElement('div')) => {
 
 function setBarText(arr) {
     for (let i in arr) {
-        barText = barText + Array(indent).join('--') + arr[i].meta.path + "<br>";
-        if(Array.isArray(arr[i].child) && arr[i].child.length) {
-            indent++;
-            setBarText(arr[i].child);
-        }
+        barText = barText + Array(indent).join('--') + arr[i].fullPath + "<br>";
         if((arr.length - 1) === Number(i)) {
             indent--;
         }
@@ -27,14 +23,10 @@ function setBarText(arr) {
 
 function setBarTests(arr) {
     for (let i in arr) {
-        if (arr[i].meta.fullPath !== null) {
+        if (arr[i].fullPath !== null) {
             for (let k in arr[i].urls) {
                 barTests = barTests + Array(indent).join('--') + arr[i].urls[k] + "<br>";
             }
-        }
-        if(Array.isArray(arr[i].child) && arr[i].child.length) {
-            indent++;
-            setBarTests(arr[i].child);
         }
         if((arr.length - 1) === Number(i)) {
             indent--;

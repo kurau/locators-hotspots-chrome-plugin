@@ -5,8 +5,8 @@ function addPin(element, currentNode) {
     pin.classList.add("test-coverage");
     pin.classList.add("coveragePin");
     pin.style.zIndex = 1002;
-    pin.innerHTML = getMapSize(currentNode.tests).toString();
-    pin.setAttribute("title", currentNode.meta.fullPath);
+    pin.innerHTML = currentNode.count.toString();
+    pin.setAttribute("title", currentNode.fullPath);
     let tests = "";
     for (let k in currentNode.tests) {
         tests = tests + k + '</br>';
@@ -27,7 +27,7 @@ function getMapSize(x) {
 function findElement(node) {
     let elem;
     let elem1 = document
-        .evaluate(node.meta.fullPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null)
+        .evaluate(node.fullPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null)
         .singleNodeValue;
 
     if (elem1 == null) {
@@ -50,13 +50,13 @@ function showElements(subArr) {
     for (let i in subArr) {
         let current = subArr[i];
 
-        if (Array.isArray(current.child) && current.child.length) {
-            showElements(current.child);
-        }
+        // if (Array.isArray(current.child) && current.child.length) {
+        //         //     showElements(current.child);
+        //         // }
 
-        if (!current.meta.fullPath) {
-            continue;
-        }
+        // if (!current.meta.fullPath) {
+        //     continue;
+        // }
 
         let elem = findElement(current);
         if (elem == null) {
