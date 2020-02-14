@@ -19,11 +19,12 @@
     position: relative;
     will-change: overflow;
     width: 100%;
-    height: 100hv;
+    height: 100%;
 }
 
 #coverageInfoBar {
     margin: 5%;
+    font-size: 14px;
 }
 
 .coveragePin {
@@ -70,4 +71,33 @@
 /* Активация секций с помощью псевдокласса :checked */
 #tab1:checked~#section1, #tab2:checked~#section2 {
     display: block;
+}
+
+.test-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.test-item {
+    padding: 3px 0;
+}
+
+.status {
+    padding-right: 5px;
+}
+
+.status-passed {
+    color: #78b63c;
+}
+
+.status-failed {
+    color: #ff2602;
+}
+
+.status-broken {
+    color: #febe0d;
+}
+
+.status-skipped {
+    color: #888888;
 }

@@ -33,9 +33,10 @@ function showData() {
                 });
         });
         chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-            chrome.tabs.insertCSS(tabs[0].id, {
-                file : "onpage/main.css"
-            });
+            chrome.tabs.insertCSS(tabs[0].id, { file : "onpage/main.css" });
+            chrome.tabs.executeScript(tabs[0].id, { file: "scripts/fontawesome.js" });
+            chrome.tabs.executeScript(tabs[0].id, { file: "scripts/moment.min.js" });
+
             chrome.tabs.executeScript(tabs[0].id, { file: "onpage/split-page.js" }, function() {
                 chrome.tabs.executeScript(tabs[0].id, { file: "onpage/show-locators.js" }, function() {
                     chrome.tabs.executeScript(tabs[0].id, { file: "onpage/show-info.js" })

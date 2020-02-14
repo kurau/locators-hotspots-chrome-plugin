@@ -1,5 +1,22 @@
 var arr1 = JSON.parse(localStorage.getItem('locators'));
 
+function getTestItems(locator) {
+    let items = "";
+    locator.tests.forEach(test => {
+        let duration = moment.duration(test.duration, 'milliseconds');
+        let durationTime = moment()
+            .seconds(duration.seconds())
+            .minutes(duration.minutes())
+            .format('mm:ss');
+        items += '<li class="test-item">';
+        items += `<i class="fa fa-check-circle status status-${test.status}" aria-hidden="true"></i>`;
+        items += `<a target="_blank" href="${test.url}">${test.name}</a>`;
+        items += `<span style="padding-left: 5px; color: gray">(${durationTime})</span>`;
+        items += '</li>'
+    });
+    return items;
+}
+
 function addPin(element, currentNode) {
     let pin = document.createElement('div');
     pin.classList.add("test-coverage");
@@ -7,10 +24,9 @@ function addPin(element, currentNode) {
     pin.style.zIndex = 1002;
     pin.innerHTML = currentNode.count.toString();
     pin.setAttribute("title", currentNode.fullPath);
-    let tests = "";
-    for (let k in currentNode.tests) {
-        tests = tests + k + '</br>';
-    }
+    let tests = '<ul class="test-list">';
+    tests += getTestItems(currentNode);
+    tests += '</ul>';
     pin.setAttribute("data-tests", tests);
 
     element.appendChild(pin);
@@ -49,14 +65,6 @@ function findElement(node) {
 function showElements(subArr) {
     for (let i in subArr) {
         let current = subArr[i];
-
-        // if (Array.isArray(current.child) && current.child.length) {
-        //         //     showElements(current.child);
-        //         // }
-
-        // if (!current.meta.fullPath) {
-        //     continue;
-        // }
 
         let elem = findElement(current);
         if (elem == null) {

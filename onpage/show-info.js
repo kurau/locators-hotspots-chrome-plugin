@@ -9,10 +9,11 @@ document.onmouseover = function (event) {
         return;
     }
 
-    let title = target.getAttribute("title");
-    section1.innerHTML = title;
-
     let tests = target.getAttribute("data-tests");
-    section2.innerHTML = tests;
+    section1.innerHTML = tests;
+
+    let title = target.getAttribute("title");
+    section2.innerHTML = title;
+
 };
 

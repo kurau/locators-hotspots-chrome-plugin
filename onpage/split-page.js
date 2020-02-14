@@ -10,10 +10,38 @@ const wrapAll = (target, wrapper = document.createElement('div')) => {
     return wrapper
 };
 
+function getTestItems(locator) {
+    let items = "";
+    locator.tests.forEach(test => {
+        let duration = moment.duration(test.duration, 'milliseconds');
+        let durationTime = moment()
+            .seconds(duration.seconds())
+            .minutes(duration.minutes())
+            .format('mm:ss');
+        items += '<li class="test-item">';
+        items += `<i class="fa fa-check-circle status status-${test.status}" aria-hidden="true"></i>`;
+        items += `<a target="_blank" href="${test.url}">${test.name}</a>`;
+        items += `<span style="padding-left: 5px; color: gray">(${durationTime})</span>`;
+        items += '</li>'
+    });
+    return items;
+}
+
+function getTestsFromLocators(locators) {
+    let tests = "<ul class='test-list'>";
+    locators.forEach(locator => {
+        if (locator.fullPath !== null) {
+            tests += getTestItems(locator)
+        }
+    });
+    tests += "</ul>";
+    return tests;
+}
+
 function setBarText(arr) {
     for (let i in arr) {
         barText = barText + Array(indent).join('--') + arr[i].fullPath + "<br>";
-        if((arr.length - 1) === Number(i)) {
+        if ((arr.length - 1) === Number(i)) {
             indent--;
         }
         barText = barText + '<br/>'
@@ -22,17 +50,7 @@ function setBarText(arr) {
 }
 
 function setBarTests(arr) {
-    for (let i in arr) {
-        if (arr[i].fullPath !== null) {
-            for (let k in arr[i].urls) {
-                barTests = barTests + Array(indent).join('--') + arr[i].urls[k] + "<br>";
-            }
-        }
-        if((arr.length - 1) === Number(i)) {
-            indent--;
-        }
-        barTests = barTests + '<br/>'
-    }
+    barTests = getTestsFromLocators(arr);
     return barText;
 }
 
@@ -42,12 +60,12 @@ function barTabs() {
 
     info.innerHTML =
         '<div class="coverageInfoBar">' +
-            '<input id="tab1" type="radio" name="tabs" checked>' +
-            '<label for="tab1" title="locators">Locators</label>' +
-            '<input id="tab2" type="radio" name="tabs">' +
-            '<label for="tab2" title="tests">Tests</label>' +
-            '<section id="section1"></section>' +
-            '<section id="section2"></section>' +
+        '<input id="tab1" type="radio" name="tabs" checked>' +
+        '<label for="tab1" title="tests">Tests</label>' +
+        '<input id="tab2" type="radio" name="tabs">' +
+        '<label for="tab2" title="locators">Locators</label>' +
+        '<section id="section1"></section>' +
+        '<section id="section2"></section>' +
         '</div>';
     return info;
 }
@@ -64,7 +82,7 @@ function splitAndShowInfo() {
     button.type = "button";
     button.onclick = function () {
         showElements(arr1);
-        var section1 = document.getElementById("section1");
+        var section1 = document.getElementById("section2");
         section1.innerHTML = barText;
     };
     bar.appendChild(button);
@@ -78,10 +96,10 @@ function splitAndShowInfo() {
     row.appendChild(bar);
     document.body.appendChild(row);
 
-    var section1 = document.getElementById("section1");
+    var section1 = document.getElementById("section2");
     section1.innerHTML = barText;
     setBarTests(arr1);
-    var section1 = document.getElementById("section2");
+    var section1 = document.getElementById("section1");
     section1.innerHTML = barTests;
 }
 

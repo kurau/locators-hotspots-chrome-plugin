@@ -1,0 +1,30 @@
+[
+  {
+    "fullPath": "//form[contains(@class, \u0027FiltersForm\u0027)][not(contains(@class, \u0027FiltersForm_extra-expanded\u0027))]//input[contains(@placeholder, \u0027Адрес или ЖК\u0027)]",
+    "count": 3,
+    "urls": [
+      "https://realty.test.vertis.yandex.ru/moskva/kupit/kvartira/",
+      "https://realty.test.vertis.yandex.ru/moskva/"
+    ],
+    "tests": [
+      {
+        "name": "Название ЖК появляется в урле",
+        "url": "https://yandex.ru",
+        "status": "passed",
+        "duration": 123124
+      },
+      {
+        "name": "Район появляется в урле после нажатия кнопки «Найти»",
+        "url": "https://yandex.ru",
+        "status": "passed",
+        "duration": 123124
+      },
+      {
+        "name": "Поиск по ЖК",
+        "url": "https://yandex.ru",
+        "status": "failed",
+        "duration": 123124
+      }
+    ]
+  }
+]
