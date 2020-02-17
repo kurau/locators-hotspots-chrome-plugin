@@ -10,7 +10,11 @@ function getTestItems(locator) {
             .format('mm:ss');
         items += '<li class="test-item">';
         items += `<i class="fa fa-check-circle status status-${test.status}" aria-hidden="true"></i>`;
-        items += `<a target="_blank" href="${test.url}">${test.name}</a>`;
+        if (test.url) {
+            items += `<a target="_blank" href="${test.url}">${test.name}</a>`;
+        } else {
+            items += `<span>${test.name}</span>`
+        }
         items += `<span style="padding-left: 5px; color: gray">(${durationTime})</span>`;
         items += '</li>'
     });
@@ -22,7 +26,7 @@ function addPin(element, currentNode) {
     pin.classList.add("test-coverage");
     pin.classList.add("coveragePin");
     pin.style.zIndex = 1002;
-    pin.innerHTML = currentNode.count.toString();
+    pin.innerHTML = currentNode.tests.length;
     pin.setAttribute("title", currentNode.fullPath);
     let tests = '<ul class="test-list">';
     tests += getTestItems(currentNode);

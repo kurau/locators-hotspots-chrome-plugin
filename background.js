@@ -5,7 +5,7 @@ chrome.runtime.onInstalled.addListener(function () {
         chrome.declarativeContent.onPageChanged.addRules([{
             conditions: [
                 new chrome.declarativeContent.PageStateMatcher({
-                    pageUrl: {hostEquals: 'realty.yandex.ru'}
+                    pageUrl: {schemes: ['http', 'https']}
                 })
             ],
             actions: [new chrome.declarativeContent.ShowPageAction()]
