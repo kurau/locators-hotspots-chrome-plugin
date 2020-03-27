@@ -22,7 +22,7 @@ function getTestItems(locator) {
 }
 
 function addPin(element, currentNode) {
-    let pin = document.createElement('div');
+    let pin = document.createElement('span');
     pin.classList.add("test-coverage");
     pin.classList.add("coveragePin");
     pin.style.zIndex = 1002;
@@ -36,84 +36,121 @@ function addPin(element, currentNode) {
     element.appendChild(pin);
 }
 
-function getMapSize(x) {
-    var len = 0;
-    for (var count in x) {
-        len++;
+function pathsByLocator(xpath) {
+    var elements = [];
+    try {
+        nodeIterator = document
+            .evaluate(xpath, document.getElementById("bodyWrapper"), null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
+
+        for (i = 0; i < nodeIterator.snapshotLength; i++) {
+            var elementNumber = i + 1;
+            elements.push("(" + xpath + ")" + "[" + elementNumber + "]")
+        }
+    } catch (err) {
+
     }
-    return len;
+    return elements;
 }
 
 function findElement(node) {
-    let elem;
-    let elem1 = document
-        .evaluate(node.fullPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null)
-        .singleNodeValue;
+    var elem;
+    var elemCandidate;
+    var paths = pathsByLocator(node.fullPath);
 
-    if (elem1 == null) {
-        return null;
+    for (var i = 0; i < paths.length; i++) {
+        try {
+            elemCandidate = document
+                .evaluate(
+                    paths[i],
+                    document.getElementById("bodyWrapper"), null,
+                    XPathResult.FIRST_ORDERED_NODE_TYPE, null)
+                .singleNodeValue;
+
+            if (elemCandidate === null) {
+                return;
+            }
+
+            if (elemCandidate.tagName === 'A') {
+                elemCandidate.style.position = "relative";
+            }
+
+            if (elemCandidate.tagName === 'INPUT') {
+                elem = elemCandidate.parentNode;
+            } else {
+                elem = elemCandidate;
+            }
+
+            // some elements cant be showed cause position "relative"
+            // in future we can use dict of exclusions
+            if (!elem.classList.contains("Popup_visible")) {
+                elem.style.position = "relative";
+            }
+            addPin(elem, node);
+        } catch (err) {
+            console.log(" err ");
+        }
+
     }
 
-    if (elem1.tagName === 'A') {
-        elem1.style.position = "relative";
-    }
-
-    if (elem1.tagName === 'INPUT') {
-        elem = elem1.parentNode;
-    } else {
-        elem = elem1;
-    }
     return elem;
 }
 
 function showElements(subArr) {
+    var t0 = performance.now();
     for (let i in subArr) {
-        let current = subArr[i];
-
-        let elem = findElement(current);
-        if (elem == null) {
-            continue;
-        }
-
-
-        addPin(elem, current);
+        findElement(subArr[i]);
     }
+    var t1 = performance.now();
+    console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
+    console.log(" END ");
 }
 
 function removePrevElements() {
-    var oldElements = document.getElementsByClassName("test-coverage");
-    for (var i = 0; i < oldElements.length; i++) {
-        oldElements[i].remove();
+    while (document.getElementsByClassName("test-coverage").length > 0)  {
+        var oldElements = document.getElementsByClassName("test-coverage");
+        var l = oldElements.length;
+        for (var i = 0; i < l; i++) {
+            try {
+                oldElements[i].remove();
+            } catch (err) {
+                console.log(" undefined ");
+            }
+        }
     }
 }
 
-var observer = new MutationObserver(function (mutations) {
-    for (let mutation of mutations) {
-        if (hasNewNode) {
-            break;
-        }
-        for (let node of mutation.addedNodes) {
-            if (!(node instanceof HTMLElement)) {
-                continue;
-            }
-            if (node.matches(".test-coverage")) {
-                continue;
-            }
-            hasNewNode = true;
-            break;
-        }
-    }
-});
-observer.observe(document.body, {subtree: true, childList: true});
-
-hasNewNode = true;
+// var observer = new MutationObserver(function (mutations) {
+//     for (let mutation of mutations) {
+//         if (hasNewNode) {
+//             break;
+//         }
+//         for (let node of mutation.addedNodes) {
+//             if (!(node instanceof HTMLElement)) {
+//                 continue;
+//             }
+//             if (node.matches(".test-coverage")) {
+//                 continue;
+//             }
+//             hasNewNode = true;
+//             break;
+//         }
+//     }
+// });
+// observer.observe(document.getElementById("bodyWrapper"), {subtree: true, childList: true});
+//
+isWroomWoroom = false;
 
 function wroomwroom() {
-    if (hasNewNode) {
+    console.log(" wroom? " + isWroomWoroom);
+    if (!isWroomWoroom) {
+        isWroomWoroom = true;
         removePrevElements();
         showElements(arr1);
-        hasNewNode = false;
     }
+    isWroomWoroom = false;
+    console.log(" WROOM DONE ");
 }
+//
+// setInterval(wroomwroom, 1000);
 
-setInterval(wroomwroom, 1000);
+wroomwroom();

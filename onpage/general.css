@@ -1,0 +1,66 @@
+.marked-element {
+    outline: 2px dashed #00BFFF;
+    background-color: rgba(7, 128, 242, 0.05);
+}
+
+.marked-element-temp {
+    outline: 3px dashed #F2AB07;
+    background-color: rgba(242, 168, 7, 0.26);
+}
+
+@keyframes slideRight {
+    from {
+        left: -50px;
+    }
+    to {
+        left: 0px;
+    }
+}
+
+.mark-successfully {
+    outline: 3px dashed #49BE17;
+    background-color: rgba(38, 255, 0, 0.1);
+}
+
+.marked-element, .marked-element-temp {
+    transition: outline 0.05s linear;
+}
+
+[locator-data-tooltip] {
+    position: absolute;
+    z-index: 1000;
+}
+
+[locator-data-tooltip]:before {
+    position: absolute;
+    bottom: 150%;
+    left: 50%;
+    margin-bottom: 5px;
+    margin-left: -10px;
+    padding: 2px 4px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #000;
+    background-color: hsla(0, 0%, 20%, 0.9);
+    color: #fff;
+    content: attr(locator-data-tooltip);
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.2;
+}
+
+[locator-data-tooltip]:after {
+    position: absolute;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -5px;
+    width: 0;
+    border-top: 5px solid #000;
+    border-top: 5px solid hsla(0, 0%, 20%, 0.9);
+    border-right: 5px solid transparent;
+    border-left: 5px solid transparent;
+    content: " ";
+    font-size: 0;
+    line-height: 0;
+}

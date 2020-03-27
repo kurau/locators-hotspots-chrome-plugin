@@ -76,7 +76,8 @@ function barTabs() {
 
 function splitAndShowInfo() {
     const bodyWrapper = wrapAll(document.body);
-    bodyWrapper.classList.add("bodyWrapper")
+    bodyWrapper.classList.add("bodyWrapper");
+    bodyWrapper.id = "bodyWrapper";
 
     var bar = document.createElement("div");
     bar.classList.add("infoBar");
@@ -85,7 +86,7 @@ function splitAndShowInfo() {
     var button = document.createElement("input");
     button.type = "button";
     button.onclick = function () {
-        showElements(arr1);
+        wroomwroom();
         var section1 = document.getElementById("section2");
         section1.innerHTML = barText;
     };

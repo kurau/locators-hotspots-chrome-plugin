@@ -15,7 +15,6 @@ function downloadData() {
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             var resp = JSON.parse(xhr.responseText);
-            console.log(" -> " + JSON.stringify(resp, null, 2));
             chrome.storage.local.set({"locators": xhr.responseText}, function () {
             });
         }
@@ -24,22 +23,24 @@ function downloadData() {
 
 function showData() {
     chrome.storage.local.get(["locators"], function (items) {
-        console.log(" # " + items.locators)
         var stringify = JSON.stringify(items.locators);
+
         chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
             chrome.tabs.executeScript(
                 tabs[0].id, {
                     code: `localStorage.setItem("locators", ${stringify});`
                 });
         });
-        chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-            chrome.tabs.insertCSS(tabs[0].id, { file : "onpage/main.css" });
-            chrome.tabs.executeScript(tabs[0].id, { file: "scripts/fontawesome.js" });
-            chrome.tabs.executeScript(tabs[0].id, { file: "scripts/moment.min.js" });
 
-            chrome.tabs.executeScript(tabs[0].id, { file: "onpage/split-page.js" }, function() {
-                chrome.tabs.executeScript(tabs[0].id, { file: "onpage/show-locators.js" }, function() {
-                    chrome.tabs.executeScript(tabs[0].id, { file: "onpage/show-info.js" })
+        chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+            chrome.tabs.insertCSS( { file : "onpage/main.css" });
+            chrome.tabs.insertCSS( { file : "onpage/general.css" });
+            chrome.tabs.executeScript( { file: "scripts/fontawesome.js" });
+            chrome.tabs.executeScript({ file: "scripts/moment.min.js" });
+
+            chrome.tabs.executeScript({ file: "onpage/split-page.js" }, function() {
+                chrome.tabs.executeScript({ file: "onpage/show-locators.js" }, function() {
+                    chrome.tabs.executeScript({ file: "onpage/show-info.js" })
                 })
             });
         });
