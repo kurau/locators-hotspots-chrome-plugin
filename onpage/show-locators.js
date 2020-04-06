@@ -1,23 +1,41 @@
 var arr1 = JSON.parse(localStorage.getItem('locators'));
+var testList = JSON.parse(localStorage.getItem('testsList'));
+console.log(arr1.page);
+// pages [ pageInfo, pageInfo ]
+
+function check(t, id) {
+    console.log(t.id + " " + id);
+    return t.id === id;
+}
 
 function getTestItems(locator) {
     let items = "";
-    locator.tests.forEach(test => {
-        let duration = moment.duration(test.duration, 'milliseconds');
-        let durationTime = moment()
-            .seconds(duration.seconds())
-            .minutes(duration.minutes())
-            .format('mm:ss');
+
+    var steps = locator.steps;
+    for (var test in steps) {
+        // console.log(test + " _ " + steps[test]);
+        // let duration = moment.duration(test.duration, 'milliseconds');
+        // let durationTime = moment()
+        //     .seconds(duration.seconds())
+        //     .minutes(duration.minutes())
+        //     .format('mm:ss');
+
+        // взять тесыт
+        // выбрать тесты
+        // вернуть в красивом виде
+
+        console.log("t " + testList.find(t => check(t, test)));
+
         items += '<li class="test-item">';
-        items += `<i class="fa fa-check-circle status status-${test.status}" aria-hidden="true"></i>`;
-        if (test.url) {
-            items += `<a target="_blank" href="${test.url}">${test.name}</a>`;
-        } else {
-            items += `<span>${test.name}</span>`
-        }
-        items += `<span style="padding-left: 5px; color: gray">(${durationTime})</span>`;
+        items += `<i class="fa fa-check-circle status status-passed" aria-hidden="true"></i>`;
+        // if (step.url) {
+        //     items += `<a target="_blank" href="${test.url}">${test.name}</a>`;
+        // } else {
+            items += `<span>${test} + ${steps[test]}</span>`;
+        // }
+        // items += `<span style="padding-left: 5px; color: gray">(${durationTime})</span>`;
         items += '</li>'
-    });
+    }
     return items;
 }
 
@@ -26,7 +44,7 @@ function addPin(element, currentNode) {
     pin.classList.add("test-coverage");
     pin.classList.add("coveragePin");
     pin.style.zIndex = 1002;
-    pin.innerHTML = currentNode.tests.length;
+    pin.innerHTML = currentNode.count;
     pin.setAttribute("title", currentNode.fullPath);
     let tests = '<ul class="test-list">';
     tests += getTestItems(currentNode);
@@ -85,6 +103,7 @@ function findElement(node) {
             if (!elem.classList.contains("Popup_visible")) {
                 elem.style.position = "relative";
             }
+
             addPin(elem, node);
         } catch (err) {
             console.log(" err ");
@@ -98,7 +117,9 @@ function findElement(node) {
 function showElements(subArr) {
     var t0 = performance.now();
     for (let i in subArr) {
-        findElement(subArr[i]);
+        for (let j in subArr[i].pins) {
+            findElement(subArr[i].pins[j]);
+        }
     }
     var t1 = performance.now();
     console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");

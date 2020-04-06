@@ -1,4 +1,8 @@
-var arr1 = JSON.parse(localStorage.getItem('locators'));
+console.log("-----");
+console.log(typeof(localStorage.getItem('locators')));
+var arr1 = localStorage.getItem('locators');
+console.log(arr1.page);
+var testList = localStorage.getItem('testsList');
 
 var barText = "";
 var barTests = "";
@@ -33,13 +37,18 @@ function getTestItems(locator) {
 
 function getTestsFromLocators(locators) {
     let tests = "<ul class='test-list'>";
-    locators.forEach(locator => {
-        if (locator.fullPath !== null) {
+    locators.pins.forEach(pin => {
+        if (pin.fullPath !== null) {
             tests += getTestItems(locator)
         }
     });
     tests += "</ul>";
     return tests;
+}
+
+function setBarTests(arr) {
+    barTests = getTestsFromLocators(arr);
+    return barText;
 }
 
 function setBarText(arr) {
@@ -50,11 +59,6 @@ function setBarText(arr) {
         }
         barText = barText + '<br/>'
     }
-    return barText;
-}
-
-function setBarTests(arr) {
-    barTests = getTestsFromLocators(arr);
     return barText;
 }
 
