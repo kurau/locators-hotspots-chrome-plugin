@@ -1,39 +1,22 @@
 var arr1 = JSON.parse(localStorage.getItem('locators'));
 var testList = JSON.parse(localStorage.getItem('testsList'));
-console.log(arr1.page);
-// pages [ pageInfo, pageInfo ]
-
-function check(t, id) {
-    console.log(t.id + " " + id);
-    return t.id === id;
-}
+var testMap = new Map(Object.entries(testList));
 
 function getTestItems(locator) {
     let items = "";
 
     var steps = locator.steps;
     for (var test in steps) {
-        // console.log(test + " _ " + steps[test]);
-        // let duration = moment.duration(test.duration, 'milliseconds');
-        // let durationTime = moment()
-        //     .seconds(duration.seconds())
-        //     .minutes(duration.minutes())
-        //     .format('mm:ss');
-
-        // взять тесыт
-        // выбрать тесты
-        // вернуть в красивом виде
-
-        console.log("t " + testList.find(t => check(t, test)));
 
         items += '<li class="test-item">';
         items += `<i class="fa fa-check-circle status status-passed" aria-hidden="true"></i>`;
-        // if (step.url) {
-        //     items += `<a target="_blank" href="${test.url}">${test.name}</a>`;
-        // } else {
-            items += `<span>${test} + ${steps[test]}</span>`;
-        // }
-        // items += `<span style="padding-left: 5px; color: gray">(${durationTime})</span>`;
+        items += `<button type="button" class="collapsible">${testMap.get(test)[0].test}</button>`;
+        items += `<div class="content">`;
+        for (var i = 0; i < testMap.get(test).length; i++) {
+            var s = testMap.get(test)[i];
+            items += `<p><div class="step-navigate" data-tests="${s.fullPath}">${s.stepDescription}</div></p>`;
+        }
+        items += `</div>`;
         items += '</li>'
     }
     return items;
@@ -44,7 +27,7 @@ function addPin(element, currentNode) {
     pin.classList.add("test-coverage");
     pin.classList.add("coveragePin");
     pin.style.zIndex = 1002;
-    pin.innerHTML = currentNode.count;
+    pin.innerHTML = `${currentNode.count}`;
     pin.setAttribute("title", currentNode.fullPath);
     let tests = '<ul class="test-list">';
     tests += getTestItems(currentNode);
@@ -70,6 +53,15 @@ function pathsByLocator(xpath) {
     return elements;
 }
 
+function evaluateXPATH(xpath) {
+    return document
+        .evaluate(
+            xpath,
+            document.getElementById("bodyWrapper"), null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE, null)
+        .singleNodeValue;
+}
+
 function findElement(node) {
     var elem;
     var elemCandidate;
@@ -77,14 +69,13 @@ function findElement(node) {
 
     for (var i = 0; i < paths.length; i++) {
         try {
-            elemCandidate = document
-                .evaluate(
-                    paths[i],
-                    document.getElementById("bodyWrapper"), null,
-                    XPathResult.FIRST_ORDERED_NODE_TYPE, null)
-                .singleNodeValue;
+            elemCandidate = evaluateXPATH(paths[i]);
 
             if (elemCandidate === null) {
+                return;
+            }
+
+            if (elemCandidate.classList.contains("coveragePin")) {
                 return;
             }
 
@@ -100,15 +91,14 @@ function findElement(node) {
 
             // some elements cant be showed cause position "relative"
             // in future we can use dict of exclusions
+            // above we will observe list of this elements
             if (!elem.classList.contains("Popup_visible")) {
                 elem.style.position = "relative";
             }
-
             addPin(elem, node);
         } catch (err) {
-            console.log(" err ");
+            console.log(" err pin add ");
         }
-
     }
 
     return elem;
@@ -140,38 +130,49 @@ function removePrevElements() {
     }
 }
 
-// var observer = new MutationObserver(function (mutations) {
-//     for (let mutation of mutations) {
-//         if (hasNewNode) {
-//             break;
-//         }
-//         for (let node of mutation.addedNodes) {
-//             if (!(node instanceof HTMLElement)) {
-//                 continue;
-//             }
-//             if (node.matches(".test-coverage")) {
-//                 continue;
-//             }
-//             hasNewNode = true;
-//             break;
-//         }
-//     }
-// });
-// observer.observe(document.getElementById("bodyWrapper"), {subtree: true, childList: true});
-//
+hasNewNode = true;
+
+var observer = new MutationObserver(function (mutations) {
+    for (let mutation of mutations) {
+        if (hasNewNode) {
+            break;
+        }
+        for (let node of mutation.addedNodes) {
+            if (!(node instanceof HTMLElement)) {
+                continue;
+            }
+            if (node.matches(".test-coverage") || node.matches(".test-list")) {
+                continue;
+            }
+            hasNewNode = true;
+            break;
+        }
+
+        if (mutation.attributeName === "class") {
+            var className = mutation.target.getAttribute("class");
+            if (className.includes("visible")) {
+                hasNewNode = true;
+            }
+        }
+    }
+});
+
+var config = {subtree: true, childList: true, attributeFilter: ["class", "style"], characterData: true};
+observer.observe(document, config);
+
+
 isWroomWoroom = false;
 
 function wroomwroom() {
-    console.log(" wroom? " + isWroomWoroom);
-    if (!isWroomWoroom) {
+    if (hasNewNode && !isWroomWoroom) {
         isWroomWoroom = true;
         removePrevElements();
         showElements(arr1);
+        hasNewNode = false;
     }
     isWroomWoroom = false;
-    console.log(" WROOM DONE ");
 }
-//
-// setInterval(wroomwroom, 1000);
+
+setInterval(wroomwroom, 1000);
 
 wroomwroom();

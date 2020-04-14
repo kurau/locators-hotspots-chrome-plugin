@@ -3,6 +3,20 @@
     overflow: auto;
 }
 
+.refreshLocators {
+    background-color: white;
+    background-size: 100px 130px;
+    border: 1px solid #555555;
+    color: #555555;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
 .infoBar {
     background-color: #ffffe3;
     z-index: 1002;
@@ -23,21 +37,29 @@
 }
 
 #coverageInfoBar {
-    margin: 5%;
+    /*margin: 5%;*/
     font-size: 14px;
 }
 
 .coveragePin {
+    all: initial;
     position: absolute;
-    border-radius: 4px;
     left: 0;
     top: 0;
-    text-align: center;
 
     color: #555;
     font-size: 12px;
     border: 1px solid #666;
     background-color: deepskyblue;
+
+    border-radius: 4px;
+    width:20px; /* or whatever width you want. */
+    max-width:20px;
+    height:20px;
+    max-height:20px;
+
+    text-align: center;
+    vertical-align: middle;
 }
 
 .relative {

@@ -1,12 +1,9 @@
-console.log("-----");
-console.log(typeof(localStorage.getItem('locators')));
-var arr1 = localStorage.getItem('locators');
-console.log(arr1.page);
-var testList = localStorage.getItem('testsList');
+var arrSplit = JSON.parse(localStorage.getItem('locators'));
+var testList2 = JSON.parse(localStorage.getItem('testsList'));
+var testMap2 = new Map(Object.entries(testList2));
 
 var barText = "";
 var barTests = "";
-var indent = 1;
 
 const wrapAll = (target, wrapper = document.createElement('div')) => {
     [...target.childNodes].forEach(child => wrapper.appendChild(child));
@@ -14,51 +11,17 @@ const wrapAll = (target, wrapper = document.createElement('div')) => {
     return wrapper
 };
 
-function getTestItems(locator) {
-    let items = "";
-    locator.tests.forEach(test => {
-        let duration = moment.duration(test.duration, 'milliseconds');
-        let durationTime = moment()
-            .seconds(duration.seconds())
-            .minutes(duration.minutes())
-            .format('mm:ss');
-        items += '<li class="test-item">';
-        items += `<i class="fa fa-check-circle status status-${test.status}" aria-hidden="true"></i>`;
-        if (test.url) {
-            items += `<a target="_blank" href="${test.url}">${test.name}</a>`;
-        } else {
-            items += `<span>${test.name}</span>`
-        }
-        items += `<span style="padding-left: 5px; color: gray">(${durationTime})</span>`;
-        items += '</li>'
-    });
-    return items;
-}
-
-function getTestsFromLocators(locators) {
-    let tests = "<ul class='test-list'>";
-    locators.pins.forEach(pin => {
-        if (pin.fullPath !== null) {
-            tests += getTestItems(locator)
-        }
-    });
-    tests += "</ul>";
-    return tests;
-}
-
-function setBarTests(arr) {
-    barTests = getTestsFromLocators(arr);
+function setBarTests() {
+    barTests = "Всего тестов " + testMap2.size;
     return barText;
 }
 
-function setBarText(arr) {
-    for (let i in arr) {
-        barText = barText + Array(indent).join('--') + arr[i].fullPath + "<br>";
-        if ((arr.length - 1) === Number(i)) {
-            indent--;
-        }
-        barText = barText + '<br/>'
+function setBarText() {
+    var sum = 0;
+    for (let i in arrSplit) {
+        sum += arrSplit[i].pins.length;
     }
+    barText = "Всего локаторов " + sum;
     return barText;
 }
 
@@ -85,15 +48,16 @@ function splitAndShowInfo() {
 
     var bar = document.createElement("div");
     bar.classList.add("infoBar");
-    setBarText(arr1);
 
-    var button = document.createElement("input");
-    button.type = "button";
+    var button = document.createElement("button");
+    button.classList.add("refreshLocators");
     button.onclick = function () {
+        hasNewNode = true;
         wroomwroom();
         var section1 = document.getElementById("section2");
         section1.innerHTML = barText;
     };
+    button.innerText = "Обновить локаторы";
     bar.appendChild(button);
 
     bar.appendChild(barTabs());
@@ -105,9 +69,10 @@ function splitAndShowInfo() {
     row.appendChild(bar);
     document.body.appendChild(row);
 
+    setBarText();
     var section1 = document.getElementById("section2");
     section1.innerHTML = barText;
-    setBarTests(arr1);
+    setBarTests();
     var section1 = document.getElementById("section1");
     section1.innerHTML = barTests;
 }
