@@ -4,11 +4,17 @@
     "description": "Build an Extension!",
     "permissions": ["activeTab", "declarativeContent", "storage", "file:///*", "*://*/*"],
     "background": {
-      "scripts": ["background.js"],
+      "scripts": [
+        "common/consts.js",
+        "background/background.js",
+        "background/actions.js",
+        "background/backgroundListener.js"
+      ],
       "persistent": false
     },
     "page_action": {
-      "default_popup": "popup.html",
+      "default_popup": "popup/popup.html",
+
       "default_icon": {
         "16": "images/get_started16.png",
         "32": "images/get_started32.png",
@@ -16,6 +22,27 @@
         "128": "images/get_started128.png"
       }
     },
+   "content_scripts": [
+     {
+       "matches": [
+         "<all_urls>"
+       ],
+       "css": [
+         "content/css/main.css",
+         "content/css/mark-element.css"
+       ],
+       "js": [
+         "common/consts.js",
+         "content/contentListener.js",
+         "content/splitPage.js",
+         "content/showSource.js",
+         "content/mouseOver.js",
+         "content/mutationObserver.js",
+         "content/scripts/fontawesome.js",
+         "content/scripts/moment.min.js"
+       ]
+     }
+   ],
     "icons": {
       "16": "images/get_started16.png",
       "32": "images/get_started32.png",

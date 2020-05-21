@@ -26,5 +26,21 @@
         "duration": 123124
       }
     ]
+  },
+  {
+    "fullPath": "//*[contains(@class, \u0027SubmitFormControl_view_yellow\u0027)]",
+    "count": 1,
+    "urls": [
+      "https://realty.test.vertis.yandex.ru/moskva/kupit/kvartira/",
+      "https://realty.test.vertis.yandex.ru/moskva/"
+    ],
+    "tests": [
+      {
+        "name": "Нажимаем кнопку",
+        "url": "https://yandex.ru",
+        "status": "passed",
+        "duration": 123124
+      }
+    ]
   }
 ]

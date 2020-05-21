@@ -1,5 +1,3 @@
-var arr1 = JSON.parse(localStorage.getItem('locators'));
-
 function getTestItems(locator) {
     let items = "";
     locator.tests.forEach(test => {
@@ -34,14 +32,6 @@ function addPin(element, currentNode) {
     pin.setAttribute("data-tests", tests);
 
     element.appendChild(pin);
-}
-
-function getMapSize(x) {
-    var len = 0;
-    for (var count in x) {
-        len++;
-    }
-    return len;
 }
 
 function findElement(node) {
@@ -86,34 +76,3 @@ function removePrevElements() {
         oldElements[i].remove();
     }
 }
-
-var observer = new MutationObserver(function (mutations) {
-    for (let mutation of mutations) {
-        if (hasNewNode) {
-            break;
-        }
-        for (let node of mutation.addedNodes) {
-            if (!(node instanceof HTMLElement)) {
-                continue;
-            }
-            if (node.matches(".test-coverage")) {
-                continue;
-            }
-            hasNewNode = true;
-            break;
-        }
-    }
-});
-observer.observe(document.body, {subtree: true, childList: true});
-
-hasNewNode = true;
-
-function wroomwroom() {
-    if (hasNewNode) {
-        removePrevElements();
-        showElements(arr1);
-        hasNewNode = false;
-    }
-}
-
-setInterval(wroomwroom, 1000);

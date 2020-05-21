@@ -1,4 +1,4 @@
-.bodyWrapper {
+#bodyWrapper {
     flex: 0 0 69%;
     overflow: auto;
 }
@@ -23,14 +23,14 @@
 }
 
 #coverageInfoBar {
-    margin: 5%;
     font-size: 14px;
 }
 
 .coveragePin {
+    all: initial;
     position: absolute;
-    left: -10px;
-    top: -10px;
+    left: 0px;
+    top: 0px;
     width: 20px;
     line-height: 20px;
     border-radius: 50%;
@@ -62,8 +62,7 @@
 
     text-align: center;
     color: #aaa;
-    border: 0px solid #ddd;
-    border-width: 1px 1px 1px 1px;
+    border: 1px solid #ddd;
     background: #f1f1f1;
     border-radius: 3px 3px 0 0;
 }
